@@ -1,8 +1,6 @@
 package com.lukeshay.discord.utils
 
 fun <T> List<T>.toJSONString(
-    separator: String = ", ",
-    prefix: String = "",
     newLines: Boolean = false
 ): String {
     val sb = StringBuilder()
@@ -15,14 +13,20 @@ fun <T> List<T>.toJSONString(
         if (first) {
             first = false
         } else {
-            sb.append(separator)
+            sb.append(", ")
         }
 
         if (newLines) {
             sb.appendLine()
         }
 
-        sb.append(prefix)
+        sb.append(
+            if (newLines) {
+                "    "
+            } else {
+                " "
+            }
+        )
         sb.append("\"$i\"")
     }
 

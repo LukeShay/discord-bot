@@ -1,6 +1,6 @@
 package com.lukeshay.discord.listeners
 
-import com.lukeshay.discord.logging.createLogger
+import com.lukeshay.discord.utils.LoggingUtils
 import net.dv8tion.jda.api.events.DisconnectEvent
 import net.dv8tion.jda.api.events.ExceptionEvent
 import net.dv8tion.jda.api.events.ReconnectedEvent
@@ -29,6 +29,6 @@ class OnConnectionChange : ListenerAdapter() {
     }
 
     companion object {
-        private val logger = createLogger(OnConnectionChange::class.java)
+        private val logger = LoggingUtils.createLogger(OnConnectionChange::class.java)
     }
 }

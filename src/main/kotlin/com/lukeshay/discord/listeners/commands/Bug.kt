@@ -11,7 +11,7 @@ class Bug(environment: Environment) :
         true,
         environment
     ) {
-    override suspend fun run(event: CommandEvent) {
+    override fun run(event: CommandEvent) {
         event.reply(Issue.BUG_REPORT.toString()).queue()
     }
 }

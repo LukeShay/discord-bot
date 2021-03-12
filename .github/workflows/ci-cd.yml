@@ -4,15 +4,6 @@ on: [ push ]
 jobs:
   build:
     runs-on: ubuntu-20.04
-    services:
-      postgres:
-        image: library/postgres:13
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: postgres
-        ports:
-          - 5432/tcp
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v1
@@ -26,9 +17,8 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - run: ./gradlew build -Dapp.version=${{ github.sha }} -Ddatabase.url=${{ env.DATABASE_URL }} -Denvironment=${{ env.ENVIRONMENT }} -Dakeyless.access.id=${{ secrets.AKEYLESS_ACCESS_ID }} -Dakeyless.access.key=${{ secrets.AKEYLESS_ACCESS_KEY }}
+      - run: ./gradlew build -Dapp.version=${{ github.sha }} -Denvironment=${{ env.ENVIRONMENT }} -Dakeyless.access.id=${{ secrets.AKEYLESS_ACCESS_ID }} -Dakeyless.access.key=${{ secrets.AKEYLESS_ACCESS_KEY }}
         env:
-          DATABASE_URL: postgres://postgres:password@localhost:${{ job.services.postgres.ports[5432] }}/postgres
           ENVIRONMENT: development
       - if: always()
         run: bash <(curl -s https://codecov.io/bash)

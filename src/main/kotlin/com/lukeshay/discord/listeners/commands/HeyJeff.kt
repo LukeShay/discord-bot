@@ -1,7 +1,6 @@
 package com.lukeshay.discord.listeners.commands
 
 import com.lukeshay.discord.domain.CommandEvent
-import com.lukeshay.discord.entities.Words
 import com.lukeshay.discord.enums.Environment
 
 class HeyJeff(environment: Environment) :
@@ -12,7 +11,7 @@ class HeyJeff(environment: Environment) :
         environment,
         listOf("hi jeff", "hello jeff")
     ) {
-    override suspend fun run(event: CommandEvent) {
-        event.reply("Hey ${Words.selectOneSingularNounByGuildId(event.guildId)}").queue()
+    override fun run(event: CommandEvent) {
+        event.reply("Hey").queue()
     }
 }

@@ -1,10 +1,9 @@
 package com.lukeshay.discord.listeners.commands
 
 import com.lukeshay.discord.domain.CommandEvent
-import com.lukeshay.discord.entities.GuildConfigs
 import com.lukeshay.discord.enums.Environment
-import net.dv8tion.jda.api.EmbedBuilder
 import java.awt.Color
+import net.dv8tion.jda.api.EmbedBuilder
 
 class Help(
     private val commands: List<Command>,
@@ -18,7 +17,7 @@ class Help(
         listOf("options")
     ) {
 
-    override suspend fun run(event: CommandEvent) {
+    override fun run(event: CommandEvent) {
         sendHelpMessage(
             event,
             false,
@@ -26,11 +25,7 @@ class Help(
             "Hey! My name is Jeffrey Krueger. Here is a list of what I am capable of."
         )
 
-        if (event.authorAsMember?.isOwner == true && GuildConfigs.isAdmin(
-                event.guild,
-                event.authorAsMember
-            )
-        ) {
+        if (event.authorAsMember?.isOwner == true) {
             sendHelpMessage(
                 event,
                 true,

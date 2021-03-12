@@ -6,7 +6,7 @@ import com.lukeshay.discord.enums.Environment
 
 class Ping(environment: Environment) :
     Command("ping", "I will reply with Pong.", true, environment) {
-    override suspend fun run(event: CommandEvent) {
+    override fun run(event: CommandEvent) {
         event.sendMessage("Pong ${Emoji.PING_PONG}").queue()
     }
 }

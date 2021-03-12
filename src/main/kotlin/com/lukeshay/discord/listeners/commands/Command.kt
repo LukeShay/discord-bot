@@ -16,7 +16,7 @@ abstract class Command(
     val aliases = als.map { alias -> "${if (leader) "!" else ""}${alias.toLowerCase()}" }
     val description = "$desc${listToAliasesStr(aliases)}"
 
-    abstract suspend fun run(event: CommandEvent)
+    abstract fun run(event: CommandEvent)
 
     fun matches(s: String): Boolean {
         return s.startsWith(command, ignoreCase = true) || aliases.find { alias ->

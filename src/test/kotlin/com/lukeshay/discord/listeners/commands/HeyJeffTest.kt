@@ -7,43 +7,39 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import net.dv8tion.jda.api.requests.restaction.MessageAction
-import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Assertions
 
 @ExperimentalCoroutinesApi
-internal class HeyJeffTest : ShouldSpec({
-    val heyJeff = HeyJeff(Environment.determineEnvironment())
+internal class HeyJeffTest : ShouldSpec(
+    {
+        val heyJeff = HeyJeff(Environment.determineEnvironment())
 
-    context("constructor") {
-        should("set correct values") {
+        context("constructor") {
+            should("set correct values") {
 
-            Assertions.assertEquals("hey jeff", heyJeff.command)
-            Assertions.assertEquals(2, heyJeff.aliases.size)
-        }
-    }
-
-    context("run") {
-        val eventMock = mockk<CommandEvent>(relaxed = true)
-        val messageActionMock = mockk<MessageAction>(relaxed = true)
-
-        beforeEach {
-            every { eventMock.guildId } returns 0
-            every { eventMock.reply(any()) } returns messageActionMock
+                Assertions.assertEquals("hey jeff", heyJeff.command)
+                Assertions.assertEquals(2, heyJeff.aliases.size)
+            }
         }
 
-        should("reply") {
-            transaction {
-                runBlockingTest {
-                    heyJeff.run(eventMock)
+        context("run") {
+            val eventMock = mockk<CommandEvent>(relaxed = true)
+            val messageActionMock = mockk<MessageAction>(relaxed = true)
 
-                    verify {
-                        eventMock.reply(any())
-                        messageActionMock.queue()
-                    }
+            beforeEach {
+                every { eventMock.guildId } returns 0
+                every { eventMock.reply(any()) } returns messageActionMock
+            }
+
+            should("reply") {
+                heyJeff.run(eventMock)
+
+                verify {
+                    eventMock.reply(any())
+                    messageActionMock.queue()
                 }
             }
         }
-    }
-})
+    },
+)

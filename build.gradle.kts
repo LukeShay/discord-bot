@@ -1,12 +1,13 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
-val springVersion = "5.3.4"
-val hibernateVersion = "6.0.0.Alpha6"
-val junit5Version = "5.6.0"
-val log4jVersion = "2.14.0"
-val exposedVersion = "0.29.1"
-val kotestVersion = "4.4.3"
+val aKeylessVersion: String by project
+val jdaVersion: String by project
+val kotestVersion: String by project
+val log4jVersion: String by project
+val mockkVersion: String by project
+val sentryVersion: String by project
+val shadowVersion: String by project
 
 buildscript {
     dependencies {
@@ -23,7 +24,6 @@ plugins {
     id("com.github.johnrengelman.shadow") version "6.1.0"
 }
 
-group = "com.lukeshay.discord"
 version = System.getProperty("app.version", "version")
 
 repositories {
@@ -35,25 +35,14 @@ repositories {
 
 dependencies {
     // Discord dependencies
-    implementation("net.dv8tion:JDA:4.2.0_228") {
+    implementation("net.dv8tion:JDA:$jdaVersion") {
         exclude("opus-java")
     }
-
-    // Hibernate dependencies
-    implementation("org.hibernate.orm:hibernate-core:$hibernateVersion")
-    implementation("com.mchange:c3p0:0.9.5.5")
-
-    // Postgres dependencies
-    implementation("org.postgresql:postgresql:42.2.19")
 
     // Kotlin dependencies
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     runtimeOnly("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
-
-    // klaxon dependencies
-    implementation("com.beust:klaxon:5.0.1")
 
     // Log4j dependencies
     implementation("org.apache.logging.log4j:log4j-api:$log4jVersion")
@@ -61,33 +50,18 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion")
 
     // AKEYLESS dependencies
-    implementation("io.akeyless:akeyless-java:2.2.1")
-
-    // Exposed dependencies
-    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-jodatime:$exposedVersion")
-
-    // JodaTime dependencies
-    implementation("joda-time:joda-time:2.10.10")
+    implementation("io.akeyless:akeyless-java:$aKeylessVersion")
 
     // Sentry dependencies
-    implementation("io.sentry:sentry-log4j2:4.3.0")
+    implementation("io.sentry:sentry-log4j2:$sentryVersion")
 
     // Test dependencies
     // Kotest dependencies
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
 
-    // Hibernate dependencies
-    testImplementation("org.hibernate.orm:hibernate-testing:$hibernateVersion")
-
     // Mockk dependencies
-    testImplementation("io.mockk:mockk:1.10.6")
-
-    // Kotlin dependencies
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2")
+    testImplementation("io.mockk:mockk:$mockkVersion")
 }
 
 tasks.jacocoTestReport {
@@ -152,19 +126,6 @@ tasks.withType<Test> {
     finalizedBy(tasks.jacocoTestCoverageVerification)
 }
 
-// tasks.shadowJar {
-//    minimize {
-//        exclude(dependency(".*:.*:.*"))
-//        include(dependency("net.dv8tion:.*:.*"))
-//        include(dependency("org.postgresql:postgresql:.*"))
-//        include(dependency("org.hibernate.orm:hibernate-core:.*"))
-//        include(dependency("com.mchange:c3p0:.*"))
-//        include(dependency("io.akeyless:akeyless-java:.*"))
-//        include(dependency("org.apache.logging.log4j:.*"))
-//        include(dependency("com.beust:klaxon:.*"))
-//    }
-// }
-
 tasks.runShadow {
     passSystemProperties(this)
 }
@@ -191,13 +152,19 @@ heroku {
     jdkVersion = "11"
     processTypes =
         mapOf(
-            "worker" to "java \$JAVA_OPTS -Ddatabase.url=\$DATABASE_URL -Denvironment=\$ENVIRONMENT -Dakeyless.access.id=\$AKEYLESS_ACCESS_ID -Dakeyless.access.key=\$AKEYLESS_ACCESS_KEY -jar build/libs/jeffery-krueger-$version-all.jar"
+            "worker" to "java \$JAVA_OPTS " +
+                "-Ddatabase.url=\$DATABASE_URL " +
+                "-Denvironment=\$ENVIRONMENT " +
+                "-Dakeyless.access.id=\$AKEYLESS_ACCESS_ID " +
+                "-Dakeyless.access.key=\$AKEYLESS_ACCESS_KEY " +
+                "-Dapp.version=$version" +
+                "-jar build/libs/jeffery-krueger-$version-all.jar"
         )
     buildpacks = listOf("heroku/jvm")
     includes = listOf("build/libs/jeffery-krueger-$version-all.jar")
     isIncludeBuildDir = false
 }
 
-tasks.withType<KotlinCompile>() {
+tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "11"
 }
