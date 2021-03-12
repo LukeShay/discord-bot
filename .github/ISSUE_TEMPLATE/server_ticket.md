@@ -1,8 +1,8 @@
 ---
 name: Guild ticket
 about: Create a ticket to get your guild fixed
-title: "[GUILD] Your title here"
-labels: guild, awaiting triage
+title: "[SERVER] Your title here"
+labels: server, awaiting triage
 assignees: LukeShay
 
 ---
@@ -11,7 +11,7 @@ assignees: LukeShay
 ONLY DO THIS IF THE BOT TELLS YOU TO
 -->
 
-Guild ID:
+Server ID:
 
 **Describe the error**
 

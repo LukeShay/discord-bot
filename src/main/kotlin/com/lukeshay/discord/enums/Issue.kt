@@ -6,7 +6,7 @@ enum class Issue(
 ) {
     BUG_REPORT("BUG", "bug_report.md"),
     FEATURE_REQUEST("FEATURE", "feature_request.md"),
-    GUILD_TICKET("GUILD", "guild_ticket.md");
+    SERVER_TICKET("SERVER", "server_ticket.md");
 
     override fun toString(): String {
         return "https://github.com/LukeShay/jeffery-krueger/issues/new?assignees=LukeShay&labels=${title.toLowerCase()}%2C+awaiting+triage&template=$template&title=%$title%5D+Your+title+here"

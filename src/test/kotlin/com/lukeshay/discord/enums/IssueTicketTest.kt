@@ -24,7 +24,7 @@ class IssueTicketTest : ShouldSpec({
         }
 
         should("contain correct template for GUILD_TICKET") {
-            val url = Issue.GUILD_TICKET.toString()
+            val url = Issue.SERVER_TICKET.toString()
 
             Assertions.assertTrue(url.contains("template=guild_ticket.md"))
         }

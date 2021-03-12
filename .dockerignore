@@ -1,9 +1,0 @@
-*
-
-!*.gradle.kts
-!gradle.properties
-
-!src/
-!gradlew
-!gradle/
-!.git/
